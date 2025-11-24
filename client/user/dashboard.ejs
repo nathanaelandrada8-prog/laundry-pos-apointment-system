@@ -1,1 +1,56 @@
-<h1>USERS DASHBOARD</h1>
+<div class="p-4 sm:p-6 lg:p-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Welcome Back, User!</h1>
+    
+    <!-- Status & Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Current Status Card -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-indigo-600">
+            <p class="text-sm font-medium text-gray-500">Current Status</p>
+            <p class="text-2xl font-semibold text-gray-900 mt-1">Order in Progress</p>
+            <p class="text-sm text-indigo-600 mt-2">Pickup scheduled for tomorrow.</p>
+        </div>
+
+        <!-- Order Count Card -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+            <p class="text-sm font-medium text-gray-500">Completed Orders</p>
+            <p class="text-2xl font-semibold text-gray-900 mt-1">15</p>
+            <p class="text-sm text-green-600 mt-2">See all order history.</p>
+        </div>
+
+        <!-- Quick Action Button -->
+        <div class="flex items-center justify-center bg-indigo-50 p-6 rounded-xl shadow-lg">
+            <a href="/user/schedule" class="bg-indigo-600 text-white font-semibold py-3 px-6 rounded-full shadow-md hover:bg-indigo-700 transition duration-300">
+                + Book New Service
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Activity/Order Summary -->
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <ul role="list" class="divide-y divide-gray-200">
+            <li class="p-4 hover:bg-gray-50 transition duration-100">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-lg font-medium text-gray-900">Order #CF1023</p>
+                        <p class="text-sm text-gray-500">Delivered on Nov 20, 2025</p>
+                    </div>
+                    <span class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
+                        Complete
+                    </span>
+                </div>
+            </li>
+            <li class="p-4 hover:bg-gray-50 transition duration-100">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-lg font-medium text-gray-900">Order #CF1024</p>
+                        <p class="text-sm text-gray-500">Scheduled for pickup Nov 25, 2025</p>
+                    </div>
+                    <span class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        Pending
+                    </span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
