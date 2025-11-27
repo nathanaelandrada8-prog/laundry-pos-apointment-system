@@ -1,3 +1,5 @@
+// server/index.js
+
 import 'dotenv/config'; 
 import express from 'express';
 import cors from 'cors';
@@ -6,7 +8,10 @@ import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 
 import connectDB from './config/db.js';
-import APP_ROUTES from './routes/appRoutes.js'; 
+import APP_ROUTES from './routes/appRoutes.js';
+
+// IMPORT ERROR HANDLERS
+import { errorHandler, notFound } from './middleware/errorMiddleware.js'; 
 
 // --- ROUTE IMPORTS ---
 import authRoutes from './routes/authRoutes.js'; 
@@ -21,8 +26,9 @@ const __dirname = path.dirname(__filename);
 connectDB(); 
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000; 
 
+// --- MIDDLEWARE ---
 app.use(cors());
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
@@ -43,12 +49,12 @@ app.use('/api/auth', authRoutes);
 app.use('/user', userRoutes); 
 app.use('/admin', adminRoutes);
 
-
 // --- PUBLIC EJS ROUTE HANDLER ---
 app.get(Object.keys(APP_ROUTES), (req, res) => {
     const routeConfig = APP_ROUTES[req.path];
 
     if (routeConfig) {
+        // Render the main layout, passing the specific content partial
         return res.render(`layout/${routeConfig.layout}`, {
             contentPartial: routeConfig.content,
             activePath: routeConfig.content 
@@ -57,6 +63,14 @@ app.get(Object.keys(APP_ROUTES), (req, res) => {
     
     res.redirect('/');
 });
+
+// --- ERROR MIDDLEWARE (MUST be last) ---
+
+// 404 Not Found Handler
+app.use(notFound);
+
+// General Error Handler
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`🔗 Access the server at http://localhost:${PORT}`);
