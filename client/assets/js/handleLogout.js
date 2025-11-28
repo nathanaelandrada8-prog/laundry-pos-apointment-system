@@ -17,12 +17,12 @@ async function handleLogout(event) {
             window.location.href = data.redirectTo;
         } else {
             console.error('Logout failed or server response was missing redirect info. Redirecting to login manually.');
-            window.location.href = '/login';
+            window.location.href = '/';
         }
 
     } catch (error) {
         console.error('Network error during logout:', error);
-        window.location.href = '/login';
+        window.location.href = '/';
     } finally {
         if (linkTextSpan) {
             linkTextSpan.textContent = originalText;

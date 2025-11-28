@@ -13,7 +13,7 @@ router.get('/dashboard', (req, res) => {
     res.render('layout/userLayout', {
         contentPartial: '../user/dashboard',
         activePath: '../user/dashboard',
-        userName: req.user.name, 
+        userName: req.user.name,
     });
 });
 

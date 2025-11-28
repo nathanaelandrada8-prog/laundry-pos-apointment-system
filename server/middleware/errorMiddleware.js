@@ -1,22 +1,25 @@
 const errorHandler = (err, req, res, next) => {
-    
-    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-    res.status(statusCode);
+    let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    let message = err.message;
 
-    if (req.originalUrl.startsWith('/api/')) {
-        res.json({
-            success: false,
-            message: err.message,
-            
-            stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+    console.error(`Status: ${statusCode} | Error: ${message} | Route: ${req.originalUrl}`);
+
+    if ((statusCode === 401 || statusCode === 403) && !req.originalUrl.startsWith('/api/')) {
+        
+        res.cookie('token', '', { 
+            httpOnly: true, 
+            expires: new Date(0),
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
         });
-    } else {
         
-        console.error(`EJS Route Error (Status ${statusCode}): ${err.message}`);
-        
-        res.cookie('token', '', { httpOnly: true, expires: new Date(0) });
-        res.redirect(`/login?error=${encodeURIComponent(err.message)}`);
+        return res.redirect(`/?error=${encodeURIComponent(message)}`);
     }
+
+    res.status(statusCode).json({
+        message: message,
+        stack: process.env.NODE_ENV === 'development' ? err.stack : null,
+    });
 };
 
 const notFound = (req, res, next) => {

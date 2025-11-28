@@ -5,8 +5,7 @@ import 'dotenv/config';
 
 const protect = asyncHandler(async (req, res, next) => {
     let token;
-
-    // 1. Get token from the cookie (requires 'cookie-parser')
+    // 1. Get token from cookies
     token = req.cookies.token;
 
     if (token) {

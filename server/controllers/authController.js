@@ -7,7 +7,7 @@ import 'dotenv/config';
 const generateToken = (id) => {
     // Requires JWT_SECRET to be defined in your server/.env file
     return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: '30d', 
+        expiresIn: '30d',
     });
 };
 
@@ -121,7 +121,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         expires: new Date(0), // Set expiration to a past date
     });
 
-    res.status(200).json({ success: true, message: 'Logged out successfully.', redirectTo: '/login' });
+    res.status(200).json({ success: true, message: 'Logged out successfully.', redirectTo: '/' });
 });
 
 export { registerUser, loginUser, logoutUser };
