@@ -26,4 +26,13 @@ router.get('/schedule', (req, res) => {
     });
 });
 
+// GET /user/profile
+router.get('/profile', (req, res) => {
+    res.render('layout/userLayout', {
+        contentPartial: '../user/profile',
+        activePath: '../user/profile',
+        userName: req.user.name,
+    });
+});
+
 export default router;

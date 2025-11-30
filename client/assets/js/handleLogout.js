@@ -29,3 +29,38 @@ async function handleLogout(event) {
         }
     }
 }
+
+const modal = document.getElementById('logoutModal');
+const userLogoutLink = document.getElementById('userLogoutLink');
+const cancelBtn = document.getElementById('cancelLogout');
+const confirmBtn = document.getElementById('confirmLogout');
+
+function showLogoutModal(e) {
+    e.preventDefault();
+    modal.style.display = 'flex';
+}
+
+function hideLogoutModal() {
+    modal.style.display = 'none';
+}
+
+if (userLogoutLink) {
+    userLogoutLink.onclick = showLogoutModal; 
+}
+cancelBtn.addEventListener('click', hideLogoutModal);
+
+confirmBtn.addEventListener('click', async () => {
+    hideLogoutModal();
+    
+    const mockEvent = { 
+        preventDefault: () => {}, 
+        currentTarget: userLogoutLink 
+    };
+    await window.handleLogout(mockEvent); 
+});
+
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        hideLogoutModal();
+    }
+});

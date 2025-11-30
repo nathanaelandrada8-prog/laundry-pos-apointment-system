@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 
 import connectDB from './config/db.js';
-import APP_ROUTES from './routes/appRoutes.js';
+import APP_ROUTES from './routes/AppRoutes.js';
 
 // IMPORT ERROR HANDLERS
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'; 
@@ -55,7 +55,7 @@ app.get(Object.keys(APP_ROUTES), (req, res) => {
         // Render the main layout, passing the specific content partial
         return res.render(`layout/${routeConfig.layout}`, {
             contentPartial: routeConfig.content,
-            activePath: routeConfig.content 
+            activePath: routeConfig.content
         });
     }
     
