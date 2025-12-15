@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const signupButton = document.querySelector('#signup-modal .sign-in-btn');
     const signupEmail = document.querySelector('#signup-modal input[type="email"]');
     const signupPassword = document.querySelector('#signup-modal input[type="password"]');
-    const signupName = document.querySelector('#signup-modal input[placeholder="Name"]'); 
+    const signupFName = document.querySelector('#signup-modal input[placeholder="First Name"]'); 
+    const signupLName = document.querySelector('#signup-modal input[placeholder="Last Name"]'); 
 
     // function to display messages in the correct box
     function displayMessage(targetBox, message, isSuccess = false) {
@@ -84,7 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
             signupButton.disabled = true;
             signupButton.textContent = 'Registering...';
 
-            const name = signupName ? signupName.value : 'User';
+            const fname = signupFName.value;
+            const lname = signupLName.value;
+            console.log(fname, lname);
             const email = signupEmail.value;
             const password = signupPassword.value;
 
@@ -92,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password }),
+                    body: JSON.stringify({ fname, lname, email, password }),
                 });
 
                 const data = await response.json();

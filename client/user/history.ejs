@@ -1,0 +1,185 @@
+<!-- client/content/user/orders.ejs -->
+
+<style>
+    /* Inherited/Reused Styles from Dashboard */
+    .card {
+        background-color: #ffffff;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+    .status-tag {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        white-space: nowrap; /* Prevent wrapping in tight tables */
+    }
+    .tag-pending { background-color: #ffedd5; color: #9a3412; }
+    .tag-progress { background-color: #bfdbfe; color: #1e40af; }
+    .tag-complete { background-color: #d1fae5; color: #065f46; } /* Adjusted tag-ready to tag-complete for history */
+    .tag-cancelled { background-color: #fee2e2; color: #b91c1c; } /* Red for cancelled */
+    .tag-ready { background-color: #fef9c3; color: #854d0e; } /* Yellow/Gold for Ready */
+
+    /* New Styles for Filters and Table */
+    .filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem; /* gap-4 */
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #f3f4f6; /* gray-100 */
+    }
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        min-width: 150px;
+        flex-grow: 1;
+    }
+    .input-group label {
+        font-size: 0.875rem; /* text-sm */
+        font-weight: 500;
+        color: #4b5563; /* text-gray-600 */
+        margin-bottom: 0.25rem;
+    }
+    .input-field, .select-field {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d1d5db; /* border-gray-300 */
+        border-radius: 0.375rem;
+        font-size: 1rem;
+    }
+    .btn-secondary {
+        background-color: #4f46e5; /* indigo-600 */
+        color: #ffffff;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        align-self: flex-end; /* Align with input fields */
+        margin-top: 1rem;
+        transition: background-color 0.15s;
+    }
+    .btn-secondary:hover {
+        background-color: #4338ca; /* indigo-700 */
+    }
+    .table-container {
+        overflow-x: auto;
+    }
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+    .orders-table th, .orders-table td {
+        padding: 1rem 0.75rem;
+        border-bottom: 1px solid #e5e7eb; /* border-gray-200 */
+    }
+    .orders-table th {
+        font-weight: 500;
+        color: #6b7280; /* text-gray-500 */
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .action-link {
+        color: #4f46e5; /* text-indigo-600 */
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.15s;
+    }
+    .action-link:hover {
+        color: #4338ca; /* indigo-700 */
+    }
+</style>
+
+<div class="max-w-6xl mx-auto space-y-8">
+    
+    <h1 class="text-3xl font-bold text-gray-800">My Order History</h1>
+
+    <!-- Filter/Search Bar -->
+    <div class="filter-bar">
+        <div class="input-group" style="flex-basis: 250px;">
+            <label for="order-id-search">Search by Order ID</label>
+            <input type="text" id="order-id-search" class="input-field" placeholder="e.g., LS-12A7B">
+        </div>
+
+        <div class="input-group" style="flex-basis: 180px;">
+            <label for="status-filter">Filter by Status</label>
+            <select id="status-filter" class="select-field">
+                <option value="all">All Statuses</option>
+                <option value="Pending">Pending / Scheduled</option>
+                <option value="Picked Up">Picked Up</option>
+                <option value="In Progress">Cleaning in Progress</option>
+                <option value="Ready">Ready for Delivery</option>
+                <option value="Delivered">Completed / Delivered</option>
+            </select>
+        </div>
+        
+        <div class="input-group" style="flex-basis: 180px;">
+            <label for="service-filter">Service Type</label>
+            <select id="service-filter" class="select-field">
+                <option value="all">All Services</option>
+                <option value="wash_fold">Wash & Fold</option>
+                <option value="dry_cleaning">Dry Cleaning</option>
+            </select>
+        </div>
+
+        <button id="apply-filters-btn" class="btn-primary" style="margin-top: auto; align-self: flex-end;">
+            Apply Filters
+        </button>
+        <button id="reset-filters-btn" class="btn-secondary-outline" style="margin-top: auto; align-self: flex-end;">
+            Reset
+        </button>
+    </div>
+
+    <!-- Orders Table Card -->
+    <div class="card">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Orders Found: <span id="orderCount">0</span></h2>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="text-center py-8 text-indigo-600 font-semibold hidden">
+            <svg class="animate-spin h-5 w-5 mr-3 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Loading orders...
+        </div>
+        
+        <div class="table-container">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th style="width: 15%">Order ID</th>
+                        <th style="width: 15%">Placed Date</th>
+                        <th style="width: 18%">Service Type</th>
+                        <th style="width: 12%">Method</th>
+                        <th style="width: 10%">Weight/Qty</th>
+                        <th style="width: 15%">Total Cost</th>
+                        <th style="width: 10%">Status</th>
+                        <th style="width: 5%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <!-- Order rows will be inserted here by JavaScript -->
+                    <tr id="noOrdersRow">
+                        <td colspan="8" class="text-center py-4 text-gray-500">No orders found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<!-- Message Box (same implementation as track_order for consistency) -->
+<div id="messageBox" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] hidden">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4 p-6 transform scale-100 transition-transform duration-300">
+        <h4 id="boxTitle" class="text-xl font-bold text-gray-800 mb-3"></h4>
+        <p id="boxMessage" class="text-gray-600 mb-6"></p>
+        <div class="flex justify-end">
+            <button id="closeBoxBtn" class="btn-primary">OK</button>
+        </div>
+    </div>
+</div>

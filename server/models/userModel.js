@@ -1,10 +1,23 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
+const addressSchema = new mongoose.Schema({
+    streetAddress: { type: String, trim: true, default: '' },
+    city: { type: String, trim: true, default: '' },
+    postalCode: { type: String, trim: true, default: '' },
+    addressNotes: { type: String, trim: true, default: '' },
+}, { _id: false }); // Do not create an _id for the subdocument
+
 const UserSchema = new mongoose.Schema({
-    name: {
+    // Splitting the old 'name' field into dedicated first/last names
+    firstName: {
         type: String,
-        required: [true, 'Please provide your full name.'],
+        required: [true, 'Please provide your first name.'],
+        trim: true,
+    },
+    lastName: {
+        type: String,
+        required: [true, 'Please provide your last name.'],
         trim: true,
     },
     email: {
@@ -29,14 +42,32 @@ const UserSchema = new mongoose.Schema({
         enum: ['customer', 'admin'],
         default: 'customer',
     },
-    address: {
+    // New fields for the profile
+    phone: {
         type: String,
         trim: true,
         default: ''
+    },
+    address: addressSchema, // Using the nested address schema
+    
+    // Field to store the profile picture as a Base64 Data URL string
+    profilePictureBase64: {
+        type: String, 
+        default: null,
     }
+    
 }, { 
     timestamps: true,
-    collection: 'users' 
+    collection: 'users',
+    // Enable virtuals when converting to JSON/Object for full name access
+    toJSON: { virtuals: true }, 
+    toObject: { virtuals: true }
+});
+
+// --- VIRTUAL PROPERTY: Full Name (for display compatibility) ---
+UserSchema.virtual('name').get(function() {
+    // Return full name by combining first and last name
+    return `${this.firstName} ${this.lastName}`;
 });
 
 // --- MIDDLEWARE: Hash Password before saving ---
@@ -47,7 +78,7 @@ UserSchema.pre('save', async function() {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 });
-
+  
 // --- INSTANCE METHOD: Compare Passwords ---
 UserSchema.methods.matchPassword = async function(enteredPassword) {
     // When checking the password, we must ensure the 'password' field is selected

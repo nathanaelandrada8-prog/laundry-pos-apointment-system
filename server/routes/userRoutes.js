@@ -1,5 +1,6 @@
 import express from 'express';
 import { protect } from '../middleware/authMiddleware.js';
+import { getUserProfilePage } from '../controllers/userController.js'; // Import the new controller function
 
 const router = express.Router();
 
@@ -17,22 +18,36 @@ router.get('/dashboard', (req, res) => {
     });
 });
 
-// GET /user/schedule
-router.get('/schedule', (req, res) => {
+// GET /user/order
+router.get('/order', (req, res) => {
     res.render('layout/userLayout', {
-        contentPartial: '../user/schedule',
-        activePath: '../user/schedule',
+        contentPartial: '../user/order',
+        activePath: '../user/order',
         userName: req.user.name, 
     });
 });
 
-// GET /user/profile
-router.get('/profile', (req, res) => {
+// GET /user/track
+router.get('/track', (req, res) => {
     res.render('layout/userLayout', {
-        contentPartial: '../user/profile',
-        activePath: '../user/profile',
-        userName: req.user.name,
+        contentPartial: '../user/track',
+        activePath: '../user/track',
+        userName: req.user.name, 
     });
 });
+
+// GET /user/history
+router.get('/history', (req, res) => {
+    res.render('layout/userLayout', {
+        contentPartial: '../user/history',
+        activePath: '../user/history',
+        userName: req.user.name, 
+    });
+});
+
+// GET /user/profile - Uses controller to fetch data and render
+router.get('/profile', getUserProfilePage); 
+
+// POST ROUTE FOR FORMS IN USERS PAGES
 
 export default router;

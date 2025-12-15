@@ -28,9 +28,9 @@ const setCookie = (res, token) => {
  * @access Public
  */
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { fname, lname, email, password } = req.body;
 
-    if (!name || !email || !password) {
+    if (!fname || !lname || !email || !password) {
         res.status(400); // HTTP 400: Bad Request
         throw new Error('Please enter all fields (name, email, password).');
     }
@@ -43,7 +43,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Password hashing is handled by pre-save middleware
     const user = await User.create({
-        name,
+        firstName: fname,
+        lastName: lname,
         email,
         password,
         role: 'customer', 

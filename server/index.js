@@ -15,6 +15,8 @@ import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js'; 
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import apiUserRoutes from './routes/apiUserRoutes.js'; // <-- NEW IMPORT
 // ---------------------
 
 const __filename = fileURLToPath(import.meta.url);
@@ -41,6 +43,8 @@ app.use(express.static(path.join(__dirname, '..', 'client')));
 
 // --- API ROUTES ------
 app.use('/api/auth', authRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/users', apiUserRoutes); // <-- NEW API ROUTE
 // ---------------------
 
 // --- PROTECTED EJS ROUTES ---

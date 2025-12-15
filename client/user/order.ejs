@@ -1,0 +1,289 @@
+<style>
+    .card {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+    }
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1.5rem;
+    }
+    .input-group label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+    .input-field, .select-field, .textarea-field {
+        padding: 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .input-field:focus, .select-field:focus, .textarea-field:focus {
+        border-color: #4f46e5;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+    .btn-primary {
+        background-color: #4f46e5;
+        color: #ffffff;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        text-align: center;
+        transition: background-color 0.15s;
+        cursor: pointer;
+        border: none;
+    }
+    .btn-primary:hover:not(:disabled) {
+        background-color: #4338ca;
+    }
+    .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .schedule-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    @media (min-width: 640px) {
+        .schedule-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    .step-header {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e0e7ff;
+    }
+    .hidden {
+        display: none;
+    }
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed #e5e7eb;
+    }
+    .summary-total {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+    /* Custom Modal Styles (for showModal function) */
+    .custom-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 2rem;
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+        max-width: 90vw;
+        width: 400px;
+        text-align: center;
+    }
+    .action-link {
+        color: #4f46e5;
+        text-decoration: underline;
+        transition: opacity 0.15s;
+    }
+    .action-link:hover {
+        opacity: 0.8;
+    }
+    /* Style the radio card selection */
+    input[type="radio"]:checked + div {
+        border-color: #4f46e5;
+        background-color: #f5f3ff; /* Indigo-50 */
+    }
+</style>
+
+<div class="space-y-8 mx-auto">
+    
+    <h1 class="text-3xl font-bold text-gray-800">Place New Order</h1>
+
+    <form id="scheduleForm" class="card space-y-8" action="/api/orders" method="POST">
+        
+        <!-- STEP 1: Fulfillment Method -->
+        <section>
+            <h2 class="step-header">1. Select Fulfillment Method</h2>
+            
+            <div class="schedule-grid">
+                
+                <!-- Method Card 1: Pickup/Delivery -->
+                <label class="block cursor-pointer">
+                    <!-- Note: Checked by default to show pickup sections initially -->
+                    <input type="radio" name="fulfillmentMethod" value="pickup" id="methodPickup" class="sr-only" checked>
+                    <div class="card p-4 border-2 border-indigo-100 hover:border-indigo-600 transition-all text-center">
+                        <h3 class="font-bold text-xl text-indigo-700">Pickup & Delivery</h3>
+                        <p class="text-sm text-gray-600 mt-1">We come to you. Schedule a time slot.</p>
+                        <p class="text-xs text-gray-500 mt-3">Requires scheduling steps below.</p>
+                    </div>
+                </label>
+                
+                <!-- Method Card 2: Walk-In -->
+                <label class="block cursor-pointer">
+                    <input type="radio" name="fulfillmentMethod" value="walkin" id="methodWalkin" class="sr-only">
+                    <div class="card p-4 border-2 border-indigo-100 hover:border-indigo-600 transition-all text-center">
+                        <h3 class="font-bold text-xl text-indigo-700">Walk-In / Drop-Off</h3>
+                        <p class="text-sm text-gray-600 mt-1">Bring your laundry directly to our shop.</p>
+                        <p class="text-xs text-gray-500 mt-3">Skip scheduling steps.</p>
+                    </div>
+                </label>
+                
+            </div>
+        </section>
+
+
+        <!-- STEP 2: Select Service -->
+        <section>
+            <h2 class="step-header">2. Select Service Type</h2>
+            
+            <div class="schedule-grid">
+                
+                <!-- Service Card 1: Wash & Fold -->
+                <label class="block cursor-pointer">
+                    <input type="radio" name="serviceType" value="wash_fold" class="sr-only" checked>
+                    <div class="card p-4 border-2 border-indigo-100 hover:border-indigo-600 transition-all text-center">
+                        <h3 class="font-bold text-xl text-indigo-700">Wash & Fold</h3>
+                        <p class="text-sm text-gray-600 mt-1">Billed by weight. Perfect for everyday clothes.</p>
+                        <p class="text-2xl font-extrabold mt-3">₱ 80<span class="text-base font-normal text-gray-500" id="washFoldPriceUnit"> / kg</span></p>
+                        <p class="text-xs text-gray-500 mt-1">48-hour standard turnaround.</p>
+                    </div>
+                </label>
+                
+                <!-- Service Card 2: Dry Cleaning -->
+                <label class="block cursor-pointer">
+                    <input type="radio" name="serviceType" value="dry_cleaning" class="sr-only">
+                    <div class="card p-4 border-2 border-indigo-100 hover:border-indigo-600 transition-all text-center">
+                        <h3 class="font-bold text-xl text-indigo-700">Dry Cleaning</h3>
+                        <p class="text-sm text-gray-600 mt-1">Billed by item. For delicate and specialized items.</p>
+                        <p class="text-2xl font-extrabold mt-3">₱ 150<span class="text-base font-normal text-gray-500" id="dryCleaningPriceUnit"> / item</span></p>
+                        <p class="text-xs text-gray-500 mt-1">72-hour specialized turnaround.</p>
+                    </div>
+                </label>
+                
+            </div>
+            
+            <div class="input-group mt-6">
+                <label for="estimatedWeight">Estimated Weight/Quantity</label>
+                <!-- NOTE: ID is 'estimatedWeight' and NAME is 'estimatedWeight' in the HTML, must be referenced correctly in JS -->
+                <input type="number" id="estimatedWeight" name="estimatedWeight" class="input-field" placeholder="e.g., 5 kg or 3 items" min="1" required>
+                <p id="quantityHint" class="text-xs text-gray-500 mt-1">This is an estimate. Final cost is calculated upon measurement at the shop.</p>
+            </div>
+        </section>
+
+        <!-- CONDITIONAL PICKUP SECTIONS -->
+        <div id="pickupSections">
+
+            <!-- STEP 3: Schedule Date and Time -->
+            <section>
+                <h2 class="step-header">3. Schedule Date and Time</h2>
+                
+                <div class="schedule-grid">
+                    <div class="input-group">
+                        <label for="pickupDate">Preferred Pickup Date</label>
+                        <input type="date" id="pickupDate" name="pickupDate" class="input-field">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="pickupTime">Time Slot</label>
+                        <!-- NOTE: ID is 'pickupTime', corrected in JS -->
+                        <select id="pickupTime" name="pickupTime" class="select-field">
+                            <option value="" disabled selected>Select a slot</option>
+                            <option value="morning">Morning (9:00 AM - 12:00 PM)</option>
+                            <option value="afternoon">Afternoon (1:00 PM - 4:00 PM)</option>
+                            <option value="evening">Evening (5:00 PM - 8:00 PM)</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 4: Pickup/Delivery Address -->
+            <section>
+                <h2 class="step-header">4. Pickup Address</h2>
+                
+                <p class="text-sm text-gray-600 mb-4">The pickup and delivery will use your default address. You can update it on your <a href="/user/profile" class="action-link">Profile page</a>.</p>
+
+                <div class="input-group">
+                    <label for="streetAddress">Street Address</label>
+                    <input type="text" id="streetAddress" name="streetAddress" class="input-field" value="12 Rizal Street" required>
+                </div>
+
+                <div class="schedule-grid">
+                    <div class="input-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" class="input-field" value="Manila" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="postalCode">Postal Code</label>
+                        <input type="text" id="postalCode" name="postalCode" class="input-field" value="1000" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="specialInstructions">Special Instructions (Optional)</label>
+                    <textarea id="specialInstructions" name="specialInstructions" class="textarea-field" rows="3" placeholder="e.g., Call upon arrival, leave bag with the guard."></textarea>
+                </div>
+
+            </section>
+        </div>
+        <!-- END CONDITIONAL PICKUP SECTIONS -->
+
+        <!-- ORDER ESTIMATION SUMMARY (Always visible) -->
+        <section class="card bg-gray-50 border border-gray-200 p-6 space-y-4">
+            <h2 class="text-xl font-bold text-gray-800">Order Estimation Summary</h2>
+            
+            <div class="summary-item">
+                <span class="text-gray-600">Service: <span id="summaryServiceType">Wash & Fold</span></span>
+                <span class="font-medium" id="summaryPriceUnit">₱ 80 / kg</span>
+            </div>
+            
+            <div class="summary-item">
+                <span class="text-gray-600">Estimated Quantity:</span>
+                <span class="font-medium"><span id="summaryQuantity">0</span> <span id="summaryUnit">kg</span></span>
+            </div>
+
+            <div class="summary-item">
+                <span class="text-gray-600">Subtotal:</span>
+                <span class="font-medium">₱ <span id="summarySubtotal">0.00</span></span>
+            </div>
+
+            <div class="summary-item">
+                <span class="text-gray-600">Pickup/Delivery Fee:</span>
+                <span id="deliveryFee" class="font-medium text-red-600">₱ 0.00</span>
+            </div>
+            
+            <div class="flex justify-between pt-2">
+                <span class="summary-total">Estimated Total:</span>
+                <span class="summary-total text-indigo-600">₱ <span id="summaryTotal">0.00</span></span>
+            </div>
+            <p id="summaryNote" class="text-xs text-gray-500 text-right mt-2"></p>
+        </section>
+
+        <!-- Error Message Area -->
+        <div id="formError" class="p-3 bg-red-100 border border-red-400 text-red-700 rounded hidden" role="alert">
+            <!-- Error messages appear here -->
+        </div>
+
+        <!-- Final Action -->
+        <button type="submit" class="btn-primary" id="confirmButton">
+            Confirm & Schedule Pickup
+        </button>
+
+    </form>
+</div>

@@ -1,111 +1,206 @@
-<div class="space-y-8">
+<style>
+    /* Global Styles */
+    .card {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        padding: 1.5rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+    }
+    .btn-primary {
+        background-color: #4f46e5; /* indigo-600 */
+        color: #ffffff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: center;
+        transition: background-color 0.15s, transform 0.1s;
+        cursor: pointer;
+        border: none;
+        display: inline-block;
+    }
+    .btn-primary:hover {
+        background-color: #4338ca; /* indigo-700 */
+        transform: translateY(-1px);
+    }
+    .loading-spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #4f46e5;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 2rem auto;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* 2. Stats Grid */
+    .grid-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    @media (min-width: 640px) { /* sm: */
+        .grid-layout {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    /* 3. Status Tags */
+    .status-tag {
+        display: inline-flex;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px; /* full rounded */
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .tag-pending {
+        background-color: #fef3c7; /* yellow-100 */
+        color: #b45309; /* yellow-800 */
+    }
+    .tag-processing, .tag-in_progress, .tag-washing, .tag-drying, .tag-folding {
+        background-color: #e0f2f1; /* cyan-50 */
+        color: #065f46; /* cyan-800 */
+    }
+    .tag-completed, .tag-delivered, .tag-ready_for_pickup {
+        background-color: #dcfce7; /* green-100 */
+        color: #15803d; /* green-800 */
+    }
+    .tag-cancelled {
+        background-color: #fee2e2; /* red-100 */
+        color: #991b1b; /* red-800 */
+    }
+
+    /* 4. Table Styles */
+    .table-container {
+        overflow-x: auto;
+    }
+    .recent-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 0.5rem; /* Space between rows */
+    }
+    .recent-table th {
+        text-align: left;
+        padding: 0.5rem 0.75rem;
+        color: #6b7280; /* gray-500 */
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .recent-table td {
+        background-color: #f9fafb; /* gray-50 for striped effect */
+        padding: 1rem 0.75rem;
+        border: 1px solid #e5e7eb;
+        font-size: 0.95rem;
+        vertical-align: middle;
+    }
+    .recent-table tbody tr td:first-child, .recent-table tbody tr td:last-child {
+        /* Ensure rounded corners on rows */
+        border-radius: 0.5rem;
+    }
+    .recent-table tbody tr td:first-child {
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+    }
+    .recent-table tbody tr td:last-child {
+        border-top-right-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+    }
+</style>
+
+<div class="space-y-8 max-w-6xl mx-auto py-8">
     
     <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
-
-    <!-- 1. Current Order Status & Quick Action (Top Row) -->
-    <div class="grid md:grid-cols-2 gap-6">
-
-        <!-- Status Card (using mock data for now) -->
-        <div class="card p-6 flex-grow">
-            <h2 class="text-xl font-semibold text-gray-700 mb-4">Current Order Status</h2>
-            <div class="flex items-center justify-between mb-4">
-                <p class="text-gray-500">Order #LS-00124</p>
-                <span class="status-tag tag-progress">In Progress</span>
-            </div>
-            
-            <p class="text-lg font-medium text-gray-900 mb-1">Estimated Completion:</p>
-            <p class="text-indigo-600 text-2xl font-bold">Today, 5:00 PM</p>
-            
-            <div class="mt-4 pt-4 border-t border-gray-200">
-                <a href="/user/tracking" class="text-indigo-600 hover:text-indigo-700 font-medium text-sm">
-                    View Tracking Details &rarr;
-                </a>
-            </div>
-        </div>
-
-        <!-- Quick Action Card -->
-        <div class="card p-6 flex-grow flex items-center justify-center bg-indigo-50 border-2 border-dashed border-indigo-300">
-            <div class="text-center">
-                <p class="text-xl font-semibold text-indigo-700 mb-4">Need a new service?</p>
-                <a href="/user/schedule" class="btn-primary inline-block">
-                    Schedule New Pickup
-                </a>
-                <p class="text-xs text-gray-500 mt-2">Book your next wash, dry, and fold in minutes.</p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- 2. Performance Summary / Stats (Middle Row) -->
-    <div class="grid-layout">
-        
-        <!-- Total Orders -->
-        <div class="card text-center">
-            <p class="text-sm font-medium text-gray-500 uppercase">Total Orders</p>
-            <p class="text-4xl font-extrabold text-gray-900 mt-1">17</p>
-        </div>
-
-        <!-- Total Weight/Items -->
-        <div class="card text-center">
-            <p class="text-sm font-medium text-gray-500 uppercase">Weight Processed</p>
-            <p class="text-4xl font-extrabold text-gray-900 mt-1">158 kg</p>
-        </div>
-        
-        <!-- Total Spent -->
-        <div class="card text-center">
-            <p class="text-sm font-medium text-gray-500 uppercase">Lifetime Spend</p>
-            <p class="text-4xl font-extrabold text-gray-900 mt-1">₱ 8,450</p>
-        </div>
-
-    </div>
     
-    <!-- 3. Recent Activity (Bottom Row) -->
-    <div class="card">
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">Recent Activity</h2>
+    <!-- Loader/Error container -->
+    <div id="dashboardLoader" class="loading-spinner"></div>
+    <div id="dashboardError" class="text-red-500 font-medium text-center hidden">
+        Failed to load dashboard data. Please try again.
+    </div>
 
-        <div class="table-container">
-            <table class="recent-table">
-                <thead>
-                    <tr>
-                        <th style="width: 25%">Order ID</th>
-                        <th style="width: 25%">Date</th>
-                        <th style="width: 25%">Service Type</th>
-                        <th style="width: 25%">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="font-medium text-indigo-600">LS-00124</td>
-                        <td>2024-11-20</td>
-                        <td>Wash & Fold (Standard)</td>
-                        <td><span class="status-tag tag-progress">In Progress</span></td>
-                    </tr>
-                    <tr>
-                        <td class="font-medium">LS-00123</td>
-                        <td>2024-11-15</td>
-                        <td>Dry Cleaning</td>
-                        <td><span class="status-tag tag-ready">Ready for Pickup</span></td>
-                    </tr>
-                    <tr>
-                        <td class="font-medium">LS-00122</td>
-                        <td>2024-11-05</td>
-                        <td>Wash & Fold (Express)</td>
-                        <td><span class="status-tag tag-ready">Completed</span></td>
-                    </tr>
-                    <tr>
-                        <td class="font-medium">LS-00121</td>
-                        <td>2024-10-30</td>
-                        <td>Dry Cleaning</td>
-                        <td><span class="status-tag tag-ready">Completed</span></td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- Main Dashboard Content (Hidden until data is loaded) -->
+    <div id="dashboardContent" class="hidden space-y-8">
+        <!-- 1. Current Order Status & Quick Action (Top Row) -->
+        <div class="grid md:grid-cols-2 gap-6">
+
+            <!-- Status Card: Target ID is here -->
+            <div id="currentOrderStatusCard" class="card p-6 flex-grow">
+                <p class="text-center text-gray-400">Loading current order status...</p>
+            </div>
+
+            <!-- Quick Action Card (Static) -->
+            <div class="card p-6 flex-grow flex items-center justify-center bg-indigo-50 border-2 border-dashed border-indigo-300">
+                <div class="text-center">
+                    <p class="text-xl font-semibold text-indigo-700 mb-4">Need a new service?</p>
+                    <a href="/user/order" class="btn-primary inline-block">
+                        Schedule New Pickup
+                    </a>
+                    <p class="text-xs text-gray-500 mt-2">Book your next wash, dry, and fold in minutes.</p>
+                </div>
+            </div>
+
         </div>
 
-        <div class="mt-4 text-right">
-            <a href="/user/orders" class="text-indigo-600 hover:text-indigo-700 font-medium">
-                View All Orders &rarr;
-            </a>
+        <!-- 2. Performance Summary / Stats (Middle Row) -->
+        <div class="grid-layout">
+            
+            <!-- Total Orders -->
+            <div class="card text-center">
+                <p class="text-sm font-medium text-gray-500 uppercase">Total Orders</p>
+                <p id="statTotalOrders" class="text-4xl font-extrabold text-gray-900 mt-1">...</p>
+            </div>
+
+            <!-- Total Quantity/Weight -->
+            <div class="card text-center">
+                <p class="text-sm font-medium text-gray-500 uppercase">Quantity Processed</p>
+                <p id="statTotalQuantity" class="text-4xl font-extrabold text-gray-900 mt-1">...</p>
+            </div>
+            
+            <!-- Total Spent -->
+            <div class="card text-center">
+                <p class="text-sm font-medium text-gray-500 uppercase">Lifetime Spend</p>
+                <p id="statLifetimeSpend" class="text-4xl font-extrabold text-gray-900 mt-1">...</p>
+            </div>
+
+        </div>
+        
+        <!-- 3. Recent Activity (Bottom Row) -->
+        <div class="card p-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Recent Activity</h2>
+
+            <div class="table-container">
+                <table class="recent-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%">Order ID</th>
+                            <th style="width: 25%">Date</th>
+                            <th style="width: 25%">Service Type</th>
+                            <th style="width: 25%">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentOrdersTableBody">
+                        <!-- Initial placeholder -->
+                        <tr><td colspan="4" class="text-center py-4 text-gray-500 bg-white rounded-lg">Loading recent orders...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="/user/order" class="text-indigo-600 hover:text-indigo-700 font-medium">
+                    View All Orders &rarr;
+                </a>
+            </div>
         </div>
     </div>
 

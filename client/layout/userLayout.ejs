@@ -21,10 +21,25 @@
                 <span class="nav-link-text">Dashboard</span>
             </a>
             
-            <!-- Schedule/Bookings -->
-            <a href="/user/schedule" class="nav-link <%= contentPartial === 'user/schedule' ? 'active-bg' : '' %>">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                <span class="nav-link-text">My Schedule</span>
+            <!-- Schedule/Bookings (Now a Plus/New Order Icon) -->
+            <a href="/user/order" class="nav-link <%= contentPartial === 'user/order' ? 'active-bg' : '' %>">
+                <!-- Icon: Plus Circle (New Order) -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="nav-link-text">Order</span>
+            </a>
+
+            <!-- Track Order (Now a Map Pin Icon) -->
+            <a href="/user/track" class="nav-link <%= contentPartial === 'user/track' ? 'active-bg' : '' %>">
+                <!-- Icon: Map Pin (Tracking) -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span class="nav-link-text">Track Order</span>
+            </a>
+
+            <!-- Order History (Now a Clock Icon) -->
+            <a href="/user/history" class="nav-link <%= contentPartial === 'user/history' ? 'active-bg' : '' %>">
+                <!-- Icon: Clock (History) -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="nav-link-text">Order History</span>
             </a>
 
              <!-- Future link: Profile -->
@@ -63,8 +78,14 @@
     </div>
 
     <%- include('../components/logout-modal.ejs') %>
+    
     <!-- Load the JavaScript modules -->
     <script src="/assets/js/toggleSidebar.js"></script>
     <script src="/assets/js/handleLogout.js"></script>
+    <script src="/assets/js/order.js"></script>
+    <script src="/assets/js/track.js"></script>
+    <script src="/assets/js/history.js"></script>
+    <script src="/assets/js/profile.js"></script>
+    <script src="/assets/js/dashboard.js"></script>
 </body>
 </html>

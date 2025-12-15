@@ -9,8 +9,6 @@
 const APP_ROUTES = {
     // --- Public Facing Routes (uses frontpageLayout.ejs) ---
     '/': { layout: 'frontpageLayout', content: '../public/home' },
-
-    
 };
 
 export default APP_ROUTES;
