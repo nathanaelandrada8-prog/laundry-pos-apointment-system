@@ -3,87 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SysAD | CleanFast Admin</title>
+    <title>Admin | Nathanael's LS</title>
+    <link rel="icon" type="img/png" href="/assets/laundry-logo.png">
+    <link rel="stylesheet" href="/assets/css/layout.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+    <script src="https://kit.fontawesome.com/e43a3a2fb8.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom styles for smooth transition and z-index */
-        .sidebar {
-            transition: width 0.3s ease-in-out;
-        }
-        .content-area {
-            transition: margin-left 0.3s ease-in-out;
-        }
-        /* Styling for minimized links (only icon visible) */
-        .sidebar.minimized .nav-link-text {
-            display: none;
-        }
-    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex">
-
-    <!-- SIDEBAR NAVIGATION -->
-    <!-- Using bg-teal-800 for a distinct admin look -->
-    <nav id="sidebar" class="sidebar w-64 bg-teal-800 text-white flex flex-col shadow-xl h-screen fixed z-20">
-        
-        <!-- Header/Logo -->
-        <div class="p-6 flex items-center justify-center border-b border-teal-700">
-            <span class="text-2xl font-bold tracking-wider whitespace-nowrap">
-                <span id="logo-full">SysAD</span>
-                <span id="logo-icon" class="hidden">SA</span>
-            </span>
+<body>
+    <nav id="sidebar" class="sidebar">
+        <div class="logo-container">
+            <img src="/assets/laundry-logo.png" alt="natnatlogo">
+            <span>Nathanael's LS</span>
         </div>
+        <div class="flex-grow">
+            <a href="/admin/dashboard" class="nav-link <%= contentPartial === 'admin/dashboard' ? 'active-bg' : '' %>">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1z"></path>
+                </svg>
+                <span class="nav-link-text">Dashboard</span>
+            </a>
+            
+            <a href="/admin/pos" class="nav-link <%= contentPartial === 'admin/pos' ? 'active-bg' : '' %>">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="nav-link-text">Pos System</span>
+            </a>
 
-        <!-- Navigation Links -->
-        <div class="flex-grow p-4 space-y-2">
-            <!-- Dashboard -->
-            <a href="/admin/dashboard" class="nav-link flex items-center p-3 rounded-lg hover:bg-teal-700 transition duration-150 group 
-                <%= contentPartial === 'admin/dashboard' ? 'bg-teal-900' : '' %>">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1z"></path></svg>
-                <span class="nav-link-text font-medium">Dashboard</span>
+            <a href="/admin/pending" class="nav-link <%= contentPartial === 'admin/pending' ? 'active-bg' : '' %>">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7v5l3 2"></path>
+                </svg>
+                <span class="nav-link-text">Pending Requests</span>
             </a>
-            
-            <!-- POS System -->
-            <a href="/admin/pos" class="nav-link flex items-center p-3 rounded-lg hover:bg-teal-700 transition duration-150 group
-                <%= contentPartial === 'admin/pos' ? 'bg-teal-900' : '' %>">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8H7m5 0h5m-5 6a9 9 0 11-1 0 9 9 0 011 0z"></path></svg>
-                <span class="nav-link-text font-medium">POS System</span>
-            </a>
-            
         </div>
 
         <!-- Footer/Logout -->
-        <div class="p-4 border-t border-indigo-600">
-            <!-- Changed to use onclick handler -->
-            <a href="#" id="userLogoutLink" onclick="handleLogout(event)"
-                class="nav-link flex items-center p-3 rounded-lg text-red-300 hover:bg-indigo-600 hover:text-red-100 transition duration-150 group">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                <span class="nav-link-text font-medium">Logout</span>
-            </a>
+        <div class="border-t">
+            <button id="userLogoutLink"
+                class="nav-link">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <span class="nav-link-text">Logout</span>
+            </button>
         </div>
     </nav>
 
-    <!-- MAIN CONTENT AREA -->
-    <div id="content-area" class="content-area flex-grow ml-64 min-h-screen flex flex-col">
-        
-        <!-- Top Bar with Toggle Button -->
-        <header class="bg-white shadow-md p-4 sticky top-0 z-10">
-            <div class="flex items-center justify-between">
-                <button id="sidebar-toggle" class="text-gray-500 hover:text-teal-600 transition duration-150">
+    <div id="content-area" class="content-area">
+        <header>
+            <div>
+                <button id="sidebar-toggle">
                     <!-- Icon for Hamburger/Menu -->
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
                 </button>
-                <div class="text-gray-700">
-                    <span class="font-medium">Admin:</span> SysAD
+                <div>
+                    <span class="font-medium">Welcome, <%= userName || 'User' %></span>
                 </div>
             </div>
         </header>
 
-        <!-- Dynamic Content Section -->
-        <main class="flex-grow p-4 md:p-8">
+        <main>
             <%- include(contentPartial) %>
         </main>
     </div>
-    <script src="../assets/js/admin.js"></script>
-    <script src="../assets/js/handleLogout.js"></script>
+
+    <%- include('../components/logout-modal.ejs') %>
+    
+    <!-- Load the JavaScript modules -->
+    <script src="/assets/js/toggleSidebar.js"></script>
+    <script src="/assets/js/handleLogout.js"></script>
+    <script src="/assets/js/pending-orders.js"></script>
 </body>
 </html>

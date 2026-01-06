@@ -147,34 +147,12 @@
     
     <!-- Tracking Timeline Card -->
     <div class="card">
-        <h2 class="text-2xl font-semibold text-gray-700 mb-6">Current Status: <span id="currentStatusText" class="text-indigo-600">Loading...</span></h2>
+        <h2 class="text-2xl font-semibold text-gray-700 mb-6">
+            Current Status: <span id="currentStatusText" class="text-indigo-600">Loading...</span>
+        </h2>
 
         <div class="timeline" id="trackingTimeline">
-            <!-- Status keys are mapped to the server-side status field -->
-            <div class="timeline-step">
-                <div class="step-icon" data-status-key="Pending">1</div>
-                <span class="step-label">Scheduled/Pending</span>
-            </div>
-            
-            <div class="timeline-step">
-                <div class="step-icon" data-status-key="Picked Up">2</div>
-                <span class="step-label">Picked Up</span>
-            </div>
-            
-            <div class="timeline-step">
-                <div class="step-icon" data-status-key="In Progress">3</div>
-                <span class="step-label">Cleaning in Progress</span>
-            </div>
-
-            <div class="timeline-step">
-                <div class="step-icon" data-status-key="Ready">4</div>
-                <span class="step-label">Ready for Delivery</span>
-            </div>
-            
-            <div class="timeline-step">
-                <div class="step-icon" data-status-key="Delivered">5</div>
-                <span class="step-label">Completed</span>
-            </div>
+            <!-- This will be dynamically populated by JavaScript -->
         </div>
     </div>
 

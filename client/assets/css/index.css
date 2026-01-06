@@ -1,4 +1,3 @@
-/* --- Color Palette Variables --- */
 :root {
     --dark-blue-primary: #1B3C53;
     --dark-blue-secondary: #234C6A;
@@ -223,6 +222,11 @@ main {
     display: flex;
 }
 
+.flex {
+    display: flex;
+    gap: 10px;
+}
+
 .close-btn {
     position: absolute;
     top: 15px;
@@ -271,11 +275,20 @@ main {
 
 input[type="email"], input[type="password"], input[type="text"] {
     width: 100%;
-    padding: 15px 20px;
+    padding: 15px 40px;
     border: 1px solid var(--light-gray);
     border-radius: 4px;
     font-size: 1rem;
     box-sizing: border-box;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    pointer-events: none;
 }
 
 input:focus {
@@ -283,13 +296,30 @@ input:focus {
     border-color: var(--dark-blue-primary);
 }
 
+.password-group {
+    position: relative;
+}
+
+.password-group input {
+    width: 100%;
+    padding-right: 40px;
+}
+
 .eye-icon {
     position: absolute;
-    right: 15px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #999;
+}
+
+.eye-icon i {
+    display: none;
+    font-size: 16px;
+}
+
+.eye-icon .fa-eye {
+    display: block;
 }
 
 /* Sign In/Register Button (Inside Form) */

@@ -122,6 +122,26 @@ const getUserOrders = asyncHandler(async (req, res) => {
     res.json(orders);
 });
 
+const getPendingPickups = asyncHandler(async (req, res) => {
+    // We filter by:
+    // 1. fulfillmentMethod must be "pickup"
+    // 2. status must be "Pending"
+    // We also populate user details to show the customer name/email in the table
+    const orders = await Order.find({
+        fulfillmentMethod: 'pickup',
+        status: 'Pending'
+    })
+    .populate('user', 'name email') // Useful for the admin table display
+    .sort({ createdAt: 1 }); // Sorted by oldest first so first-come-first-served
+
+    if (orders) {
+        res.json(orders);
+    } else {
+        res.status(404);
+        throw new Error('No pending pickup orders found');
+    }
+});
+
 // @desc    Update an order (only if status is 'Pending')
 // @route   PUT /api/orders/:id
 // @access  Private
@@ -300,5 +320,47 @@ const getDashboardSummary = asyncHandler(async (req, res) => {
     });
 });
 
+// @desc    Approve or Deny a laundry request
+// @route   PUT /api/orders/handle-request/:id
+// @access  Private/Admin
+const updateRequest = asyncHandler(async (req, res) => {
+    const { status, adminNote } = req.body;
 
-export { createOrder, getUserOrders, updateOrder, getDashboardSummary };
+    // 1. Find the order by ID
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        res.status(404);
+        throw new Error('Order not found');
+    }
+
+    // 2. Validate that the order is actually Pending
+    // This prevents double-approving or modifying closed orders
+    if (order.status !== 'Pending') {
+        res.status(400);
+        throw new Error(`Order has already been processed (Current Status: ${order.status})`);
+    }
+
+    // 3. Update the fields
+    order.status = status; // Expected: 'Processing' or 'Cancelled'
+    
+    // We save the admin's note (especially important for 'Cancelled' status)
+    if (adminNote) {
+        order.adminNote = adminNote;
+    }
+
+    // 4. Save the updated order
+    const updatedOrder = await order.save();
+
+    res.json({
+        message: `Order successfully ${status === 'Approved' ? 'Approved' : 'Denied'}`,
+        order: updatedOrder
+    });
+});
+
+export { createOrder, 
+    getUserOrders, 
+    updateOrder, 
+    getDashboardSummary, 
+    getPendingPickups,
+    updateRequest };

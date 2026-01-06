@@ -68,8 +68,12 @@ const userOrderSchema = mongoose.Schema(
         status: {
             type: String,
             required: true,
-            enum: ['Pending', 'Picked Up', 'In Progress', 'Ready', 'Delivered'],
+            enum: ['Pending', 'Picked Up', 'In Progress', 'Ready', 'Delivered', 'Denied'],
             default: 'Pending',
+        },
+        adminNote: {
+            type: String,
+            default: '',
         },
     },
     {

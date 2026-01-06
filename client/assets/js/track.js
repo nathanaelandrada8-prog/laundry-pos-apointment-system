@@ -165,29 +165,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // Update Status Timeline
-        updateTimeline(order.status);
+        updateTimeline(order);
         
         // Update Edit Button state
         editBtn.disabled = order.status !== "Pending";
     };
 
-    const updateTimeline = (currentStatus) => {
-        const steps = document.querySelectorAll('.timeline-step');
-        let isComplete = true; // Tracks whether preceding steps were completed
+    const updateTimeline = (order) => {
+        const timelineContainer = document.getElementById('trackingTimeline');
+        const currentStatus = order.status;
+        const method = order.fulfillmentMethod; // 'pickup' or 'walkin'
 
-        steps.forEach(step => {
-            const icon = step.querySelector('.step-icon');
-            const key = icon.getAttribute('data-status-key');
+        // Define the steps for each method
+        const timelineConfigs = {
+            pickup: [
+                { key: 'Pending', label: 'Scheduled' },
+                { key: 'Approved', label: 'For Pickup' },
+                { key: 'Picked Up', label: 'Picked Up' },
+                { key: 'In Progress', label: 'Cleaning' },
+                { key: 'Ready', label: 'Ready for Delivery' },
+                { key: 'Delivered', label: 'Completed' }
+            ],
+            walkin: [
+                { key: 'Pending', label: 'Waiting for Drop Off' },
+                { key: 'In Progress', label: 'Cleaning' },
+                { key: 'Ready', label: 'Ready for Pickup' },
+                { key: 'Delivered', label: 'Completed/Picked Up' }
+            ]
+        };
 
-            icon.classList.remove('complete', 'active');
+        const steps = timelineConfigs[method] || timelineConfigs.pickup;
+        
+        // Clear existing timeline
+        timelineContainer.innerHTML = '';
 
-            if (key === currentStatus) {
-                icon.classList.add('active');
-                currentStatusText.textContent = key;
-                isComplete = false; // Stop marking subsequent steps as complete
-            } else if (isComplete) {
-                icon.classList.add('complete');
+        // Calculate width percentage for desktop lines
+        const stepWidth = 100 / steps.length;
+
+        let isPastCurrent = false;
+
+        steps.forEach((step, index) => {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'timeline-step';
+            stepDiv.style.width = window.innerWidth > 768 ? `${stepWidth}%` : '100%';
+
+            const isMatch = step.key === currentStatus;
+            
+            // Determine icons state
+            let statusClass = '';
+            if (isMatch) {
+                statusClass = 'active';
+                isPastCurrent = true;
+                document.getElementById('currentStatusText').textContent = step.label;
+            } else if (!isPastCurrent) {
+                statusClass = 'complete';
             }
+
+            stepDiv.innerHTML = `
+                <div class="step-icon ${statusClass}" data-status-key="${step.key}">${index + 1}</div>
+                <span class="step-label">${step.label}</span>
+            `;
+
+            timelineContainer.appendChild(stepDiv);
         });
     };
 
