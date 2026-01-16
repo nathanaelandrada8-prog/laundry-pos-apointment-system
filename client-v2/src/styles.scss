@@ -1,0 +1,58 @@
+@import 'material-icons/iconfont/material-icons.css';
+
+*, html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+  --primary: #3b82f6;
+  --secondary: #60a5fa;
+  --dark: #1e293b;
+  --light: #f8fafc;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--light);
+  color: var(--dark);
+}
+
+input.ng-invalid.ng-touched {
+  border: 2px solid #ef4444;
+  background-color: #fff1f2;
+  animation: shake 0.4s ease-in-out;
+}
+
+.auto-error-msg {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+  animation: fadeIn 0.2s ease-in;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &::before {
+    content: 'error_outline';
+    font-family: 'Material Icons';
+    font-size: 14px;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}

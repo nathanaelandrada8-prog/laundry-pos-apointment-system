@@ -1,0 +1,119 @@
+.service-container {
+  padding: 10px 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.header-section {
+  text-align: center;
+  h1 {
+    font-size: 3rem;
+    color: #1e293b;
+    font-weight: 800;
+    margin-bottom: 5px;
+  }
+  p {
+    color: #64748b;
+    font-size: 1.1rem;
+  }
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  width: 100%;
+}
+
+.service-card {
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  }
+
+  &.featured {
+    border: 2px solid #2da0c7;
+    .badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #2da0c7;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+  }
+
+  .icon-box {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    
+    .material-icons { font-size: 32px; }
+    
+    &.blue { background: #eef4ff; color: #3b82f6; }
+    &.teal { background: #e0f2f1; color: #2da0c7; }
+    &.purple { background: #f3e8ff; color: #a855f7; }
+  }
+
+  h3 { color: #1e293b; font-size: 1.5rem; margin-bottom: 15px; }
+  p { color: #64748b; margin-bottom: 25px; line-height: 1.6; }
+
+  .price {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 25px;
+    span { font-size: 1rem; color: #94a3b8; font-weight: 500; }
+  }
+}
+
+.btn-select {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  color: #1e293b;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover { background: #f8fafc; }
+  &.primary { background: #1e293b; color: white; border: none; }
+}
+
+.additional-info {
+  display: flex;
+  gap: 50px;
+  margin-top: 20px;
+  background: white;
+  padding: 30px 50px;
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    .material-icons { color: #2da0c7; font-size: 30px; }
+    h4 { margin: 0; color: #1e293b; }
+    p { margin: 0; color: #64748b; font-size: 0.85rem; }
+  }
+}

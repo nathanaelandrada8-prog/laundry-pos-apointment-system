@@ -1,0 +1,38 @@
+<aside class="sidebar" [class.collapsed]="!menuOpen()">
+  <div class="sidebar-header">
+    @if (menuOpen()) {
+      <div class="logo">Admin<span>Panel</span></div>
+    }
+    <button class="toggle-btn" (click)="toggleMenu()">
+      <span class="material-icons">{{ menuOpen() ? 'menu_open' : 'menu' }}</span>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul>
+      @for (item of adminMenu; track item.label) {
+        <li>
+          <a [routerLink]="item.route" routerLinkActive="active-link">
+            <span class="material-icons">{{ item.icon }}</span>
+            @if (menuOpen()) {
+              <span class="label">{{ item.label }}</span>
+              
+              @if (item.label === 'Pending Requests' && pendingCount() > 0) {
+                <span class="badge">{{ pendingCount() }}</span>
+              }
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="onLogout()">
+      <span class="material-icons">logout</span>
+      @if (menuOpen()) {
+        <span class="label">Logout</span>
+      }
+    </button>
+  </div>
+</aside>

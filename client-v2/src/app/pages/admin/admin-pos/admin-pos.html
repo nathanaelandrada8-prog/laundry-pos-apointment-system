@@ -1,0 +1,91 @@
+<div class="pos-container">
+  <div class="pos-layout">
+
+    <div class="main-panel">
+      <header class="panel-header">
+        <div class="customer-chip">
+          @if (taggedOrder()) {
+            <span class="avatar">{{ taggedOrder().fullName[0] }}</span>
+            <div class="chip-text">
+              <span class="name">{{ taggedOrder().fullName }}</span>
+              <span class="id">#{{ taggedOrder()._id.substring(18) }}</span>
+            </div>
+            <button class="btn-icon" (click)="taggedOrder.set(null)"><span class="material-icons">close</span></button>
+          } @else {
+            <span class="no-customer">No customer tagged</span>
+          }
+        </div>
+        <div class="date-now">{{ today | date:'fullDate' }}</div>
+      </header>
+
+      <section class="billing-section">
+        <div class="input-card">
+          <label>Laundry Weight</label>
+          <div class="weight-input-wrapper">
+            <input type="number" [(ngModel)]="weight" (input)="calculateTotal()" placeholder="0.0">
+            <span class="unit">KG</span>
+          </div>
+          <div class="quick-weights">
+            @for (w of [5, 7, 10, 15]; track w) {
+              <button (click)="weight = w; calculateTotal()">+{{w}}kg</button>
+            }
+          </div>
+        </div>
+
+        <div class="billing-grid">
+          <div class="input-group">
+            <label>Price / KG</label>
+            <div class="prefix-input">
+              <span>₱</span>
+              <input type="number" [(ngModel)]="pricePerKg" (input)="calculateTotal()">
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Extra Fees</label>
+            <div class="prefix-input">
+              <span>₱</span>
+              <input type="number" [(ngModel)]="additionalFees" (input)="calculateTotal()">
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="summary-panel">
+      <h3>Order Summary</h3>
+
+      <div class="receipt-stub">
+        <div class="line">
+          <span>Service:</span>
+          <strong>{{ taggedOrder()?.method || 'N/A' }}</strong>
+        </div>
+        <div class="line">
+          <span>Weight Charge:</span>
+          <span>₱{{ (weight * pricePerKg) | number:'1.2-2' }}</span>
+        </div>
+        <div class="line">
+          <span>Extras:</span>
+          <span>₱{{ additionalFees | number:'1.2-2' }}</span>
+        </div>
+        <hr>
+        <div class="total-line">
+          <span>Total Amount</span>
+          <span class="total-price">₱{{ total | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="payment-methods">
+        <label>Payment Method</label>
+        <div class="method-grid">
+          <button class="active"><span class="material-icons">payments</span> Cash</button>
+          <!-- <button><span class="material-icons">qr_code_2</span> GCash</button> -->
+        </div>
+      </div>
+
+      <button class="btn-checkout" [disabled]="!weight || !taggedOrder()" (click)="processPayment()">
+        Confirm & Print Invoice
+      </button>
+    </aside>
+
+  </div>
+</div>

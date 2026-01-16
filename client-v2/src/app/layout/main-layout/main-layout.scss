@@ -1,0 +1,20 @@
+.user-dashboard-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.sidebar-wrapper {
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #f8fafc;
+  height: 100%;
+  overflow-y: auto;
+}

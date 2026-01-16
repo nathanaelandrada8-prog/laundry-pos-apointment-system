@@ -1,33 +1,13 @@
-import express, { Router } from 'express';
-import { protect } from '../middleware/authMiddleware.js';
-import { createOrder, 
-    getUserOrders, 
-    updateOrder, 
-    getDashboardSummary, 
-    getPendingPickups,
-    updateRequest } from '../controllers/orderController.js';
+import express from 'express';
+import { createOrder, getOrders, updateOrder, moveToHistory } from '../controllers/OrderController.js';
+import { protect } from '../middlewares/AuthMiddleware.js';
 
 const router = express.Router();
 
-// All routes here are accessed via /api/orders
+router.post('/create-order', protect, createOrder);
+router.get('/get-orders', protect, getOrders);
+router.put('/update-order/:id', protect, updateOrder);
+router.post('/move-to-history/:id', protect, moveToHistory);
 
-// Middleware to ensure user is logged in for all order operations
-router.use(protect);
-
-// POST /api/orders - Create a new laundry order
-router.post('/', createOrder);
-
-// PUT /api/orders - update
-router.put('/:id', updateOrder);
-
-router.put('/handle-request/:id', updateRequest)
-
-// GET /api/orders - Get all orders for the logged-in user
-router.get('/', getUserOrders);
-
-// GET /api/orders/pending - get pending request for pickup
-router.get('/pending', getPendingPickups);
-
-router.get('/summary', getDashboardSummary);
 
 export default router;

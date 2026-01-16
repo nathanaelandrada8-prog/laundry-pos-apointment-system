@@ -1,11 +1,10 @@
-import User from '../models/userModel.js';
+import User from '../models/UserModel.js';
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 import 'dotenv/config'; 
 
 // Helper function to generate JWT
 const generateToken = (id) => {
-    // Requires JWT_SECRET to be defined in your server/.env file
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: '30d',
     });
@@ -15,8 +14,7 @@ const generateToken = (id) => {
 const setCookie = (res, token) => {
     res.cookie('token', token, {
         httpOnly: true,
-        // Use Lax or Strict for CSRF protection
-        sameSite: 'lax', 
+        sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production', 
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
@@ -51,18 +49,19 @@ const registerUser = asyncHandler(async (req, res) => {
     });
 
     if (user) {
-        setCookie(res, generateToken(user._id));
+        const fullName = `${user.firstName} ${user.lastName}`;
+        const token = generateToken(user._id);
+        setCookie(res, token);
 
         res.status(201).json({ // HTTP 201: Created
             success: true,
             message: 'Registration successful. Redirecting to dashboard.',
             data: {
                 id: user._id,
-                name: user.name,
+                name: fullName,
                 email: user.email,
                 role: user.role,
-            },
-            redirectTo: '/user/dashboard', 
+            }
         });
     } else {
         res.status(400);
@@ -83,28 +82,27 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new Error('Please enter both email and password.');
     }
 
-    // Select '+password' to retrieve the hash for comparison
     const user = await User.findOne({ email }).select('+password');
 
     if (user && (await user.matchPassword(password))) {
-        
-        const redirectTo = user.role === 'admin' ? '/admin/dashboard' : '/user/dashboard';
 
-        setCookie(res, generateToken(user._id));
+        const fullName = `${user.firstName} ${user.lastName}`;
+        const token = generateToken(user._id);
 
-        res.status(200).json({ // HTTP 200: OK
+        setCookie(res, token);
+
+        res.status(200).json({
             success: true,
             message: 'Login successful. Redirecting...',
             data: {
                 id: user._id,
-                name: user.name,
+                name: fullName,
                 email: user.email,
                 role: user.role,
-            },
-            redirectTo,
+            }
         });
     } else {
-        res.status(401); // HTTP 401: Unauthorized
+        res.status(401);
         throw new Error('Invalid credentials (email or password incorrect).');
     }
 });
@@ -116,10 +114,9 @@ const loginUser = asyncHandler(async (req, res) => {
  * @access Public
  */
 const logoutUser = asyncHandler(async (req, res) => {
-    // Clear the JWT cookie to end the session
     res.cookie('token', '', {
         httpOnly: true,
-        expires: new Date(0), // Set expiration to a past date
+        expires: new Date(0),
     });
 
     res.status(200).json({ success: true, message: 'Logged out successfully.', redirectTo: '/' });

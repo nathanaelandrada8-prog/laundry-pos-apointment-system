@@ -1,0 +1,15 @@
+<div class="modal-overlay" (click)="close()">
+  <div class="modal-card logout-card" (click)="$event.stopPropagation()">
+    <div class="icon-warning">
+      <span class="material-icons">logout</span>
+    </div>
+    
+    <h2>Confirm Logout</h2>
+    <p>Are you sure you want to sign out? You will need to log back in to manage your laundry orders.</p>
+    
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="close()">Stay Logged In</button>
+      <button class="btn-confirm" (click)="confirmLogout()">Yes, Logout</button>
+    </div>
+  </div>
+</div>

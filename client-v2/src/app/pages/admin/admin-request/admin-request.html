@@ -1,0 +1,88 @@
+<div class="page-container">
+  <div class="header">
+    <h1>Pending Requests</h1>
+    <p>Review and manage incoming laundry bookings from customers.</p>
+  </div>
+
+  <div class="requests-table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Service Type</th>
+          <th>Pickup Date</th>
+          <th>Est. Delivery Date</th>
+          <th>Address</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (req of requests(); track req.id) {
+          <tr>
+            <td>
+              <div class="user-info">
+                <strong>{{ req.fullName }}</strong>
+                <span>{{ req.phone }}</span>
+              </div>
+            </td>
+            <td>{{ getSelectedMethodName(req.method) }}</td>
+            <td>
+              <div class="data-time">
+                  <strong>{{ req.pickupDate | date:'mediumDate' }}</strong>
+                  <span>{{ req.pickupTime }}</span>
+                </div>
+            </td>
+            <td>
+              <div class="data-time">
+                  <strong>{{ req.deliveryDate | date:'mediumDate' }}</strong>
+                  <span>{{ req.deliveryTime }}</span>
+                </div>
+            </td>
+            <td>
+            <div class="address-info">
+              <div class="street-line">
+                {{ req.address.streetAddress }}
+                @if (req.address.addressNotes) {
+                  <span class="material-icons notes-icon" [title]="req.address.addressNotes">
+                    sticky_note_2
+                  </span>
+                }
+              </div>
+              <span class="sub-address">
+                {{ req.address.city }}, {{ req.address.postalCode }}
+              </span>
+            </div>
+          </td>
+            <td class="actions">
+              <button class="btn-approve" (click)="approveRequest(req._id)">
+                <span class="material-icons">check</span> Approve
+              </button>
+              <button class="btn-deny" (click)="openDenyModal(req)">
+                <span class="material-icons">close</span> Deny
+              </button>
+            </td>
+        } @empty {
+          <tr>
+            <td colspan="5" class="empty-state">No pending requests at the moment.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (selectedRequest) {
+  <div class="modal-overlay">
+    <div class="deny-card">
+      <h3>Reason for Denial</h3>
+      <p>Please provide a reason why <strong>{{ selectedRequest.customerName }}'s</strong> request is being denied.</p>
+
+      <textarea [(ngModel)]="denyReason" placeholder="e.g. Pickup location out of range, Shop at full capacity..."></textarea>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="selectedRequest = null">Cancel</button>
+        <button class="btn-confirm-deny" (click)="confirmDeny()" [disabled]="!denyReason">Confirm Denial</button>
+      </div>
+    </div>
+  </div>
+}

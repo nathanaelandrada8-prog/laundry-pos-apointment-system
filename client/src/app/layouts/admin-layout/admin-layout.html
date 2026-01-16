@@ -1,0 +1,12 @@
+<div class="user-dashboard-wrapper">
+  <div class="sidebar-wrapper">
+    <app-admin-sidebar></app-admin-sidebar>
+  </div>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+@if (authUi.isLogoutVisible()) {
+  <app-logout-modal></app-logout-modal>
+}

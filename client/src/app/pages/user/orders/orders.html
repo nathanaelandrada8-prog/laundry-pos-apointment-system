@@ -1,0 +1,115 @@
+<div class="order-container">
+  @if (hasActiveOrder()) {
+    <div class="locked-state">
+      <span class="material-icons">lock</span>
+      <h2>Booking in Progress</h2>
+      <p>You already have a pending or active laundry request.</p>
+      <button class="btn-track" routerLink="/user/track">Track My Order</button>
+    </div>
+  } @else {
+    <div class="header">
+      <h1>Schedule your Laundry</h1>
+      <p>Select your preferred washing method and schedule.</p>
+    </div>
+
+    <div class="order-content">
+      <form class="form-card" #orderForm="ngForm" (ngSubmit)="submitOrder(orderForm)">
+        
+        <section class="form-section">
+          <h3><span class="step">1</span> Washing Method</h3>
+          <div class="method-grid">
+            @for (method of washMethods; track method.id) {
+              <div class="method-card" 
+                   [class.selected]="orderData.method === method.id"
+                   (click)="orderData.method = method.id">
+                <span class="material-icons">{{ method.icon }}</span>
+                <div class="method-info">
+                  <span class="method-name">{{ method.name }}</span>
+                  <span class="method-desc">{{ method.desc }}</span>
+                </div>
+                <input type="radio" name="washMethod" [value]="method.id" [(ngModel)]="orderData.method" required hidden>
+              </div>
+            }
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h3><span class="step">2</span> Pickup Schedule</h3>
+          <div class="input-grid">
+            <div class="form-group">
+              <label>Pickup Date</label>
+              <input type="date" name="pickupDate" [(ngModel)]="orderData.pickupDate" (change)="updateDeliveryDate()" required>
+            </div>
+            <div class="form-group">
+              <label>Preferred Time</label>
+              <input type="time" name="pickupTime" [(ngModel)]="orderData.pickupTime" required>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h3><span class="step">3</span> Estimated Completion</h3>
+          <div class="input-grid">
+            <div class="form-group">
+              <label>Delivery Date</label>
+              <input type="date" name="deliveryDate" [min]="orderData.pickupDate" [(ngModel)]="orderData.deliveryDate" required>
+            </div>
+            <div class="form-group">
+              <label>Preferred Time</label>
+              <input type="time" name="deliveryTime" [(ngModel)]="orderData.deliveryTime" required>
+            </div>
+          </div>
+        </section>
+
+        <button type="submit" class="btn-submit" [disabled]="orderForm.invalid || !orderData.method">
+          Confirm Booking
+        </button>
+      </form>
+
+      <div class="summary-card">
+        <h3>Order Summary</h3>
+        <div class="summary-item">
+          <span class="material-icons">wash</span>
+          <div>
+            <p class="label">Method</p>
+            <p class="value">{{ getSelectedMethodName() || 'Not Selected' }}</p>
+          </div>
+        </div>
+        <div class="summary-item">
+          <span class="material-icons">local_shipping</span>
+          <div>
+            <p class="label">Pickup</p>
+            <p class="value">{{ orderData.pickupDate || 'Select Date' }} @ {{ orderData.pickupTime || '--:--' }}</p>
+          </div>
+        </div>
+        <div class="summary-item">
+          <span class="material-icons">event_available</span>
+          <div>
+            <p class="label">Expected Delivery</p>
+            <p class="value">{{ orderData.deliveryDate || 'Select Date' }} @ {{ orderData.deliveryTime || '--:--' }}</p>
+          </div>
+        </div>
+        
+        <div class="note">
+          <span class="material-icons">info</span>
+          <p>Standard processing time is 24-48 hours. Express options available at counter.</p>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+@if (showProfileModal) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <span class="material-icons warning-icon">report_problem</span>
+      <h2>Incomplete Profile</h2>
+      <p>To provide the best laundry service, we need your <b>Phone Number</b> and <b>Delivery Address</b> before you can place an order.</p>
+      
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeModal()">Later</button>
+        <button class="btn-primary" routerLink="/user/profile">Go to Profile</button>
+      </div>
+    </div>
+  </div>
+}

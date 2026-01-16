@@ -1,0 +1,80 @@
+<div class="manage-container">
+  <div class="header">
+    <div class="title-group">
+      <h1>Active Workload</h1>
+      <p>Monitor and update the status of ongoing laundry services.</p>
+    </div>
+    <div class="stats">
+      <div class="stat-badge">
+        <span class="label">Processing</span>
+        <span class="count">{{ activeOrders().length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="manage-table">
+      <thead>
+        <tr>
+          <th>Customer & Order ID</th>
+          <th>Service</th>
+          <th>Schedule</th>
+          <th>Current Status</th>
+          <th>Quick Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of activeOrders(); track order._id) {
+          <tr>
+            <td>
+              <div class="customer-cell">
+                <strong>{{ order.fullName }}</strong>
+                <span class="order-id">#{{ order._id.substring(18) }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="method-tag">{{ getMethodName(order.method) }}</span>
+            </td>
+            <td>
+              <div class="schedule-cell">
+                <span><span class="material-icons">hail</span> {{ order.pickupDate | date:'shortDate' }}</span>
+                <span><span class="material-icons">local_shipping</span> {{ order.deliveryDate | date:'shortDate' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="status-pill" [attr.data-status]="order.status">
+                {{ order.status }}
+              </span>
+            </td>
+            <td>
+              <div class="action-cell">
+                @if (order.status === 'Approved') {
+                  <button class="btn-bill" (click)="goToPos(order._id)">
+                    <span class="material-icons">receipt_long</span>
+                    Bill
+                  </button>
+                } @else {
+                  <select
+                    [ngModel]="order.status"
+                    (ngModelChange)="updateStatus(order._id, $event)"
+                    class="status-select"
+                    [disabled]="order.status === 'Completed'"> @for (status of getAvailableStatuses(order.status); track status) {
+                      <option [value]="status">{{ status }}</option>
+                    }
+                  </select>
+                }
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="empty-row">
+              <span class="material-icons">inventory_2</span>
+              <p>No active orders in processing.</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

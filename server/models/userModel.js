@@ -6,7 +6,7 @@ const addressSchema = new mongoose.Schema({
     city: { type: String, trim: true, default: '' },
     postalCode: { type: String, trim: true, default: '' },
     addressNotes: { type: String, trim: true, default: '' },
-}, { _id: false }); // Do not create an _id for the subdocument
+}, { _id: false });
 
 const UserSchema = new mongoose.Schema({
     // Splitting the old 'name' field into dedicated first/last names
@@ -42,15 +42,12 @@ const UserSchema = new mongoose.Schema({
         enum: ['customer', 'admin'],
         default: 'customer',
     },
-    // New fields for the profile
     phone: {
         type: String,
         trim: true,
         default: ''
     },
-    address: addressSchema, // Using the nested address schema
-    
-    // Field to store the profile picture as a Base64 Data URL string
+    address: addressSchema, 
     profilePictureBase64: {
         type: String, 
         default: null,

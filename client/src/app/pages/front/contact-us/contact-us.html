@@ -1,0 +1,78 @@
+<section class="contact-container">
+  <div class="contact-wrapper">
+    
+    <div class="contact-info">
+      <h1>Get in Touch</h1>
+      <p>Have questions about our pickup service or bulk pricing? We're here to help!</p>
+
+      <div class="info-details">
+        <div class="info-item">
+          <span class="material-icons">location_on</span>
+          <div>
+            <h4>Our Location</h4>
+            <p>123 Laundry Lane, Clean City, ST 56789</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <span class="material-icons">phone</span>
+          <div>
+            <h4>Phone Number</h4>
+            <p>+1 (555) 123-4567</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <span class="material-icons">email</span>
+          <div>
+            <h4>Email Address</h4>
+            <p>support&#64;laundrygo.com</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="social-links">
+        <span class="social-circle"><span class="material-icons">facebook</span></span>
+        <span class="social-circle"><span class="material-icons">instagram</span></span>
+        <span class="social-circle"><span class="material-icons twit">X</span></span>
+      </div>
+    </div>
+
+    <div class="contact-form-card">
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Your name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="email@example.com">
+        </div>
+
+        <div class="form-group">
+          <label>Subject</label>
+          <select>
+            <option>General Inquiry</option>
+            <option>Pickup Issues</option>
+            <option>Pricing/Packages</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="5" placeholder="How can we help you?"></textarea>
+        </div>
+
+        <button type="submit" class="btn-send">
+          Send Message
+          <span class="material-icons">send</span>
+        </button>
+      </form>
+    </div>
+
+  </div>
+</section>

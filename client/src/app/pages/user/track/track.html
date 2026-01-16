@@ -1,0 +1,59 @@
+<div class="track-container">
+  @if (order()) {
+    <div class="track-card">
+      <div class="track-header">
+        <div>
+          <p class="order-id">Order #{{ order()._id.substring(0, 8).toUpperCase() }}</p>
+          <h1>Track Your Laundry</h1>
+        </div>
+        <span class="status-badge">{{ order().status }}</span>
+      </div>
+
+      <div class="stepper">
+        @for (step of steps; track step.status; let i = $index) {
+          <div class="step" [class.active]="isCurrent(step.status)" [class.completed]="isPast(i)">
+            <div class="step-icon">
+              <span class="material-icons">{{ step.icon }}</span>
+            </div>
+            <p class="step-label">{{ step.label }}</p>
+            @if (i < steps.length - 1) {
+              <div class="step-line"></div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-group">
+          <label>Pickup Location</label>
+          <p>{{ order().address.streetAddress }}</p>
+          <p class="sub">{{ order().address.city }}, {{ order().address.postalCode }}</p>
+        </div>
+        
+        <div class="detail-group">
+          <label>Service Type</label>
+          <p>{{ order().method.replace('_', ' ') | titlecase }}</p>
+        </div>
+
+        <div class="detail-group">
+          <label>Estimated Pickup</label>
+          <p>{{ order().pickupDate }}</p>
+          <p class="sub">at {{ order().pickupTime }}</p>
+        </div>
+
+        <div class="detail-group">
+          <label>Estimated Delivery</label>
+          <p>{{ order().deliveryDate }}</p>
+          <p class="sub">at {{ order().deliveryTime }}</p>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <span class="material-icons">shopping_basket</span>
+      <h2>No Active Orders</h2>
+      <p>You don't have any pending requests at the moment.</p>
+      <button class="btn-order" routerLink="/user/orders">Create New Order</button>
+    </div>
+  }
+</div>
